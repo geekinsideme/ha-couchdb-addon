@@ -1,5 +1,5 @@
 # https://developers.home-assistant.io/docs/add-ons/dockerfile
-ARG BUILD_FROM
+ARG BUILD_FROM=docker.io/library/debian:bullseye
 FROM ${BUILD_FROM}
 
 # Set non-interactive mode for apt-get
