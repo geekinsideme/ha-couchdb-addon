@@ -1,13 +1,4 @@
-# https# Install dependencies and add the official Apache CouchDB repository
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-        ca-certificates curl gpg apt-transport-https lsb-release \
-    && curl https://couchdb.apache.org/repo/keys.asc | gpg --dearmor | tee /usr/share/keyrings/couchdb-archive-keyring.gpg >/dev/null 2>&1 \
-    && echo "deb [signed-by=/usr/share/keyrings/couchdb-archive-keyring.gpg] https://apache.jfrog.io/artifactory/couchdb-deb/ $(lsb_release -cs) main" \
-        | tee /etc/apt/sources.list.d/couchdb.list >/dev/null \
-    && apt-get update \
-    && apt-get install -y --no-install-recommends couchdb \
-    && rm -rf /var/lib/apt/lists/*ers.home-assistant.io/docs/add-ons/dockerfile
+# https://developers.home-assistant.io/docs/add-ons/dockerfile
 ARG BUILD_FROM=docker.io/library/debian:bullseye
 FROM ${BUILD_FROM}
 
@@ -17,9 +8,9 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Install dependencies and add the official Apache CouchDB repository
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
-        curl gpg apt-transport-https lsb-release \
+        ca-certificates curl gpg apt-transport-https lsb-release \
     && curl https://couchdb.apache.org/repo/keys.asc | gpg --dearmor | tee /usr/share/keyrings/couchdb-archive-keyring.gpg >/dev/null 2>&1 \
-    && echo "deb [signed-by=/usr/share/keyrings/couchdb-archive-keyring.gpg] https://apache.jfrog.io/artifactory/couchdb-deb/ $(lsb_release -cs) main" \
+    && echo "deb [signed-by=/usr/share.keyrings/couchdb-archive-keyring.gpg] https://apache.jfrog.io/artifactory/couchdb-deb/ $(lsb_release -cs) main" \
         | tee /etc/apt/sources.list.d/couchdb.list >/dev/null \
     && apt-get update \
     && apt-get install -y --no-install-recommends couchdb \
