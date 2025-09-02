@@ -13,6 +13,10 @@ RUN apt-get update \
     && echo "deb https://apache.jfrog.io/artifactory/couchdb-deb/ $(lsb_release -cs) main" \
         | tee /etc/apt/sources.list.d/couchdb.list >/dev/null \
     && apt-get update \
+    && groupadd -r couchdb \
+    && useradd -r -g couchdb couchdb \
+    && mkdir -p /opt/couchdb/data /opt/couchdb/etc /opt/couchdb/var/log /opt/couchdb/var/run \
+    && chown -R couchdb:couchdb /opt/couchdb \
     && apt-get install -y --no-install-recommends couchdb \
     && rm -rf /var/lib/apt/lists/*
 
