@@ -8,7 +8,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 # Install dependencies and add the official Apache CouchDB repository
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
-        ca-certificates curl gpg apt-transport-https lsb-release \
+        ca-certificates curl gpg gpg-agent apt-transport-https lsb-release \
     && curl https://couchdb.apache.org/repo/keys.asc | apt-key add - \
     && echo "deb https://apache.jfrog.io/artifactory/couchdb-deb/ $(lsb_release -cs) main" \
         | tee /etc/apt/sources.list.d/couchdb.list >/dev/null \
