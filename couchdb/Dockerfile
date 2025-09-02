@@ -9,8 +9,8 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         ca-certificates curl gpg apt-transport-https lsb-release \
-    && curl https://couchdb.apache.org/repo/keys.asc | gpg --dearmor | tee /usr/share/keyrings/couchdb-archive-keyring.gpg >/dev/null 2>&1 \
-    && echo "deb [signed-by=/usr/share.keyrings/couchdb-archive-keyring.gpg] https://apache.jfrog.io/artifactory/couchdb-deb/ $(lsb_release -cs) main" \
+    && curl https://couchdb.apache.org/repo/keys.asc | apt-key add - \
+    && echo "deb https://apache.jfrog.io/artifactory/couchdb-deb/ $(lsb_release -cs) main" \
         | tee /etc/apt/sources.list.d/couchdb.list >/dev/null \
     && apt-get update \
     && apt-get install -y --no-install-recommends couchdb \
