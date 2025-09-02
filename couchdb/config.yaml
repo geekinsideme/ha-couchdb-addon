@@ -1,6 +1,6 @@
 # https://developers.home-assistant.io/docs/add-ons/configuration
 name: "CouchDB"
-version: "1.0.3"
+version: "1.0.4"
 slug: "couchdb"
 description: "A database that embraces the web, running as a HA add-on"
 url: "https://github.com/geekinsideme/ha-couchdb-addon"
