@@ -2,6 +2,9 @@
 ARG BUILD_FROM
 FROM ${BUILD_FROM}
 
+# Set non-interactive mode for apt-get
+ENV DEBIAN_FRONTEND=noninteractive
+
 # Install dependencies and add the official Apache CouchDB repository
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
