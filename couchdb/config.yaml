@@ -1,9 +1,9 @@
 # https://developers.home-assistant.io/docs/add-ons/configuration
 name: "CouchDB"
-version: "1.0.2"
+version: "1.0.3"
 slug: "couchdb"
 description: "A database that embraces the web, running as a HA add-on"
-url: "https://github.com/YOUR_GITHUB_USERNAME/ha-couchdb-addon"
+url: "https://github.com/geekinsideme/ha-couchdb-addon"
 arch:
   - aarch64
   - armv7
