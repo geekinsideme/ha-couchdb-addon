@@ -70,7 +70,29 @@ RUN if ! id couchdb > /dev/null 2>&1; then \
 RUN mkdir -p /data/couchdb && \
     chown -R couchdb:couchdb /data/couchdb
 
+# ヘルスチェック用のスクリプトを作成
+RUN cat > /healthcheck.sh << 'EOF'
+#!/bin/bash
+# CouchDBが起動しているかチェック
+if curl -f -s http://localhost:5984/ > /dev/null 2>&1; then
+    echo "CouchDB is running"
+    exit 0
+else
+    echo "CouchDB is not responding"
+    exit 1
+fi
+EOF
+
+RUN chmod +x /healthcheck.sh
+
+# ヘルスチェックを設定
+HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
+    CMD /healthcheck.sh
+
 COPY run.sh /
 RUN chmod +x /run.sh
+
+# ポートを公開
+EXPOSE 5984
 
 CMD [ "/run.sh" ]

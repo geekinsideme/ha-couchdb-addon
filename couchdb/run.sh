@@ -50,5 +50,40 @@ fi
 
 echo "Starting CouchDB server..."
 
+# Start CouchDB in the background first to check if it starts properly
+/opt/couchdb/bin/couchdb &
+COUCHDB_PID=$!
+
+# Wait for CouchDB to start
+echo "Waiting for CouchDB to start..."
+for i in {1..30}; do
+    if curl -f -s http://localhost:5984/ > /dev/null 2>&1; then
+        echo "CouchDB is running and responding on port 5984"
+        echo "CouchDB welcome response:"
+        curl -s http://localhost:5984/ | head -5
+        echo ""
+        echo "=== CouchDB Web UI Access Information ==="
+        echo "Web UI (Fauxton): http://[YOUR_HA_IP]:5984/_utils/"
+        echo "Username: ${COUCHDB_USER}"
+        echo "Password: ${COUCHDB_PASSWORD}"
+        echo "API Endpoint: http://[YOUR_HA_IP]:5984/"
+        echo "============================================="
+        break
+    fi
+    echo "Waiting for CouchDB... ($i/30)"
+    sleep 2
+done
+
+# Check if CouchDB is still running
+if ! kill -0 $COUCHDB_PID 2>/dev/null; then
+    echo "ERROR: CouchDB process has died"
+    exit 1
+fi
+
+# Stop the background process and start in foreground
+kill $COUCHDB_PID
+wait $COUCHDB_PID 2>/dev/null
+
+echo "CouchDB startup verified, starting in foreground..."
 # Start CouchDB in the foreground
 exec /opt/couchdb/bin/couchdb

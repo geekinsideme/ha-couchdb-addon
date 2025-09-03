@@ -1,6 +1,6 @@
 # https://developers.home-assistant.io/docs/add-ons/configuration
 name: "CouchDB"
-version: "1.0.21"
+version: "1.1.0"
 slug: "couchdb"
 description: "A database that embraces the web, running as a HA add-on"
 url: "https://github.com/geekinsideme/ha-couchdb-addon"
@@ -15,7 +15,8 @@ map:
 ports:
   "5984/tcp": 5984
 ports_description:
-  "5984/tcp": "CouchDB Web UI (Fauxton)"
+  "5984/tcp": "CouchDB Web UI (Fauxton) and HTTP API"
+webui: "http://[HOST]:[PORT:5984]/_utils/"
 options:
   couchdb_user: "admin"
   couchdb_password: ""
