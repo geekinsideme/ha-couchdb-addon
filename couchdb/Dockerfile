@@ -12,6 +12,9 @@ RUN apt-get update
 RUN apt-get install -y --no-install-recommends \
     ca-certificates curl gpg gpg-agent apt-transport-https lsb-release
 
+# Create couchdb group to avoid group ID conflict
+RUN groupadd -r couchdb
+
 # Add CouchDB GPG key
 RUN curl https://couchdb.apache.org/repo/keys.asc | apt-key add -
 
