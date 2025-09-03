@@ -27,15 +27,15 @@ RUN echo "deb https://apache.jfrog.io/artifactory/couchdb-deb/ $(lsb_release -cs
 # Update package list again
 RUN apt-get update
 
+# Create directories and set ownership before installing couchdb
+RUN mkdir -p /opt/couchdb/data /opt/couchdb/etc /opt/couchdb/var/log /opt/couchdb/var/run \
+    && chown -R couchdb:couchdb /opt/couchdb
+
 # Install CouchDB
 RUN apt-get install -y --no-install-recommends couchdb
 
 # Clean up
 RUN rm -rf /var/lib/apt/lists/*
-
-# Create directories and set ownership
-RUN mkdir -p /opt/couchdb/data /opt/couchdb/etc /opt/couchdb/var/log /opt/couchdb/var/run \
-    && chown -R couchdb:couchdb /opt/couchdb
 
 # Copy the run script into the container
 COPY run.sh /
