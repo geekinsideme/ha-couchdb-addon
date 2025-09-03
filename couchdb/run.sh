@@ -1,18 +1,22 @@
-#!/usr/bin/with-contenv bashio
+#!/bin/bash
+set -e
 
-bashio::log.info "Configuring CouchDB..."
+echo "Configuring CouchDB..."
 
 # Define file and directory paths
 readonly COUCHDB_DATA_DIR="/data/couchdb"
 readonly COUCHDB_CONFIG_FILE="/opt/couchdb/etc/local.d/hassio.ini"
 
-# Get configuration options from Home Assistant UI
-readonly COUCHDB_USER=$(bashio::config 'couchdb_user')
-readonly COUCHDB_PASSWORD=$(bashio::config 'couchdb_password')
+# Get configuration options from environment variables (fallback to defaults)
+readonly COUCHDB_USER="${COUCHDB_USER:-admin}"
+readonly COUCHDB_PASSWORD="${COUCHDB_PASSWORD:-password}"
 
 # Ensure the data directory exists
 mkdir -p "${COUCHDB_DATA_DIR}"
 chown -R couchdb:couchdb "${COUCHDB_DATA_DIR}"
+
+# Create the configuration directory if it doesn't exist
+mkdir -p "$(dirname "${COUCHDB_CONFIG_FILE}")"
 
 # Create the configuration file from user options
 # This will set the admin user/password, bind to all network interfaces,
@@ -32,7 +36,7 @@ EOT
 # Set correct ownership for the config file
 chown couchdb:couchdb "${COUCHDB_CONFIG_FILE}"
 
-bashio::log.info "Starting CouchDB server..."
+echo "Starting CouchDB server..."
 
 # Start CouchDB in the foreground
 exec /opt/couchdb/bin/couchdb

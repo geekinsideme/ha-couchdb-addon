@@ -59,6 +59,6 @@ RUN set -x && \
     rm -f /usr/sbin/policy-rc.d /usr/bin/systemctl /usr/sbin/invoke-rc.d /usr/sbin/service /usr/sbin/update-rc.d
 
 COPY run.sh /
-RUN chmod a+x /run.sh
+RUN chmod +x /run.sh
 
 CMD [ "/run.sh" ]
