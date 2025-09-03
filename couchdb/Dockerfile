@@ -4,29 +4,27 @@ FROM ${BUILD_FROM}
 
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Update & install base dependencies (add debconf-utils for preseed)
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
       ca-certificates curl gpg gpg-agent apt-transport-https lsb-release debconf-utils && \
     rm -rf /var/lib/apt/lists/*
 
-# Add CouchDB GPG key
 RUN curl https://couchdb.apache.org/repo/keys.asc | apt-key add -
 
-# Add CouchDB repository
 RUN echo "deb https://apache.jfrog.io/artifactory/couchdb-deb/ $(lsb_release -cs) main" \
     | tee /etc/apt/sources.list.d/couchdb.list >/dev/null
 
-# Preseed debconf (avoid interactive post-install questions)
 RUN echo "couchdb couchdb/mode select standalone" | debconf-set-selections && \
     echo "couchdb couchdb/nodename string couchdb@localhost" | debconf-set-selections
 
-# Install CouchDB (let package create user/group and directories)
+# 自動サービス起動を抑止 (postinst が systemd を呼ぼうとして失敗するのを防ぐ)
+RUN printf '#!/bin/sh\nexit 101\n' > /usr/sbin/policy-rc.d && chmod +x /usr/sbin/policy-rc.d
+
 RUN apt-get update && \
     apt-get install -y --no-install-recommends couchdb && \
-    rm -rf /var/lib/apt/lists/*
+    rm -rf /var/lib/apt/lists/* && \
+    rm -f /usr/sbin/policy-rc.d
 
-# Copy the run script into the container
 COPY run.sh /
 RUN chmod a+x /run.sh
 
