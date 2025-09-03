@@ -14,6 +14,8 @@ RUN apt-get install -y --no-install-recommends \
 
 # Create couchdb group to avoid group ID conflict
 RUN groupadd -r couchdb
+# Create couchdb user to fix installation script issues
+RUN useradd -r -g couchdb -d /opt/couchdb -s /bin/bash couchdb
 
 # Add CouchDB GPG key
 RUN curl https://couchdb.apache.org/repo/keys.asc | apt-key add -
