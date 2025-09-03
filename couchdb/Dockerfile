@@ -58,6 +58,18 @@ RUN set -x && \
     rm -rf /var/lib/apt/lists/* && \
     rm -f /usr/sbin/policy-rc.d /usr/bin/systemctl /usr/sbin/invoke-rc.d /usr/sbin/service /usr/sbin/update-rc.d
 
+# CouchDBユーザーが存在しない場合は手動で作成
+RUN if ! id couchdb > /dev/null 2>&1; then \
+        echo "Creating couchdb user..." && \
+        groupadd -r couchdb && \
+        useradd -r -g couchdb -d /opt/couchdb -s /bin/bash couchdb && \
+        chown -R couchdb:couchdb /opt/couchdb; \
+    fi
+
+# データディレクトリを事前作成
+RUN mkdir -p /data/couchdb && \
+    chown -R couchdb:couchdb /data/couchdb
+
 COPY run.sh /
 RUN chmod +x /run.sh
 

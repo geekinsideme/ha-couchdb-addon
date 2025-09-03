@@ -13,6 +13,14 @@ readonly COUCHDB_PASSWORD="${COUCHDB_PASSWORD:-password}"
 
 # Ensure the data directory exists
 mkdir -p "${COUCHDB_DATA_DIR}"
+
+# Check if couchdb user exists, if not create it
+if ! id couchdb > /dev/null 2>&1; then
+    echo "Creating couchdb user..."
+    groupadd -r couchdb 2>/dev/null || true
+    useradd -r -g couchdb -d /opt/couchdb -s /bin/bash couchdb 2>/dev/null || true
+fi
+
 chown -R couchdb:couchdb "${COUCHDB_DATA_DIR}"
 
 # Create the configuration directory if it doesn't exist
@@ -34,7 +42,11 @@ cat > "${COUCHDB_CONFIG_FILE}" <<- EOT
 EOT
 
 # Set correct ownership for the config file
-chown couchdb:couchdb "${COUCHDB_CONFIG_FILE}"
+if id couchdb > /dev/null 2>&1; then
+    chown couchdb:couchdb "${COUCHDB_CONFIG_FILE}"
+else
+    echo "Warning: couchdb user not found, skipping ownership change"
+fi
 
 echo "Starting CouchDB server..."
 
