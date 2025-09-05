@@ -1,7 +1,9 @@
 #!/bin/bash
 set -e
 
-echo "Configuring CouchDB..."
+echo "============================================="
+echo "Script started at: $(date '+%Y-%m-%d %H:%M:%S')"
+echo "Configuring CouchDB... "
 
 # Define file and directory paths
 readonly COUCHDB_DATA_DIR="/data/couchdb"
@@ -35,10 +37,29 @@ cat > "${COUCHDB_CONFIG_FILE}" <<- EOT
 
 	[chttpd]
 	bind_address = 0.0.0.0
+    require_valid_user = true
+    max_http_request_size = 4294967296
+
+    [chttpd_auth]
+    require_valid_user = true
+    authentication_redirect = /_utils/session.html
 
 	[couchdb]
 	database_dir = ${COUCHDB_DATA_DIR}
 	view_index_dir = ${COUCHDB_DATA_DIR}
+    single_node=true
+    max_document_size = 50000000
+
+    [httpd]
+    WWW-Authenticate = Basic realm="couchdb"
+    enable_cors = true
+
+    [cors]
+    origins = app://obsidian.md,capacitor://localhost,http://localhost
+    credentials = true
+    headers = accept, authorization, content-type, origin, referer
+    methods = GET, PUT, POST, HEAD, DELETE
+    max_age = 3600
 EOT
 
 # Set correct ownership for the config file
